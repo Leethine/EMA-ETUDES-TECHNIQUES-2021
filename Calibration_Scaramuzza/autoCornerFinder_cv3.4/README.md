@@ -5,6 +5,7 @@ This is a modification of autoConerFinder tool, originally provided by Davide Sc
 #### Compilation
 Before compilation, install opencv-3.4.12 and replace in the beginning of the Makfile: 
 > CV_INC_PATH=your_opencv_include_path
+> 
 > CV_LINK_PATH=your_opencv_link_path
 
 then run `make`.
