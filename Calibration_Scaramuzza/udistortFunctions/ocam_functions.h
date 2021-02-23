@@ -96,5 +96,5 @@ void create_reproject_LUT( CvMat * rep_LUTx, CvMat * rep_LUTy, struct ocam_model
  xc, yc are the row and column coordinates of the image center
 ------------------------------------------------------------------------------*/
 //void create_panoramic_undistortion_LUT ( CvMat *mapx, CvMat *mapy, float Rmin, float Rmax, float xc, float yc );
-
+void descart2angular(double PointANG[2], double PointXY[2], struct ocam_model *myocam_model);
 float readsf(void);

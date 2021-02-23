@@ -318,27 +318,43 @@ void create_panoramic_undistortion_LUT ( CvMat *mapx, CvMat *mapy, float Rmin, f
 }
 **/
 
-void descart2angular(double PointXYZ[3], double PointANG[3], struct ocam_model *myocam_model) {
+void descart2angular(double PointANG[2], double PointXY[2], struct ocam_model *myocam_model) {
 // Convert cartesian corrdinate to angular coordinate
-// TODO
-    double *pol        = myocam_model->pol; 
-    double *invpol     = myocam_model->invpol; 
-    double xc          = (myocam_model->xc);
-    double yc          = (myocam_model->yc); 
-    double c           = (myocam_model->c);
-    double d           = (myocam_model->d);
-    double e           = (myocam_model->e);
-    int    width       = (myocam_model->width);
-    int    height      = (myocam_model->height);
-    int length_invpol  = (myocam_model->length_invpol);
-    double norm        = sqrt(point3D[0]*point3D[0] + point3D[1]*point3D[1]);
-    
-    double theta       = atan(point3D[2]/norm);
-    double t, t_i;
-    double rho, x, y;
-    double invnorm;
-    int i;
+
+    double *pol    = myocam_model->pol;
+    double xc      = (myocam_model->xc);
+    double yc      = (myocam_model->yc); 
+    double c       = (myocam_model->c);
+    double d       = (myocam_model->d);
+    double e       = (myocam_model->e);
+    int length_pol = (myocam_model->length_pol); 
+    double invdet  = 1/(c-d*e); // 1/det(A), where A = [c,d;e,1] as in the Matlab file
+
+    double xp = invdet*(    (PointXY[0] - xc) - d*(PointXY[1] - yc) );
+    double yp = invdet*( -e*(PointXY[0] - xc) + c*(PointXY[1] - yc) );
   
+    double r   = sqrt(  xp*xp + yp*yp ); //distance [pixels] of the point from the image center
+    double zp  = pol[0];
+    double r_i = 1;
+    
+    for (int i = 1; i < length_pol; i++)
+    {
+        r_i *= r;
+        zp  += r_i*pol[i];
+    }
+  
+    //normalize to unit norm
+    double invnorm;
+    invnorm = 1/sqrt( xp*xp + yp*yp + zp*zp );
+    
+    xp = invnorm*xp;
+    yp = invnorm*yp;
+
+    double phi   = -atan(xp/yp);
+    double theta =  asin(sqrt(xp*xp + yp*yp)/1.0);
+    
+    PointANG[0] = phi;
+    PointANG[1] = theta;
 }
 
 float readsf(void) {
