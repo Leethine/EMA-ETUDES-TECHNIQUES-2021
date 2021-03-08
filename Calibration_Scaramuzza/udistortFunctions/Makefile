@@ -27,13 +27,14 @@ LINKOBJ_CONTOUR = contour.o ocam_functions.o
 OBJ_CORNER = harris.o ocam_functions.o 
 LINKOBJ_CORNER = harris.o ocam_functions.o 
 
+OBJ = undistort.o testrepro.o contour.o harris.o ocam_functions.o 
 BIN = Undistort TestRepro Contour HarrisCorner
-RM = rm -f
+RM = rm -f 
 
 all: Undistort TestRepro Contour HarrisCorner
 
 clean:
-	${RM} $(OBJ) $(BIN)
+	${RM} $(OBJ) $(BIN) 
 
 Undistort: $(OBJ_UNDISTORT)
 	$(CPP) $(LINKOBJ_UNDISTORT) -o Undistort $(DEFLIBS) $(LINKLIBS)
